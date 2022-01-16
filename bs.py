@@ -14,7 +14,7 @@ class Option:
         self.nd1=norm.cdf(self.d1)
         self.nd2=norm.cdf(self.d2)
         self.pdfd1=norm.pdf(self.d1)
-        self.diff=1e-5
+        self.diff=1e-4
     def price(self):
         callprice = self.S*self.nd1-self.K*math.exp(-self.R*self.t)*self.nd2
         if self.call:
