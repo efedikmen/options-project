@@ -51,13 +51,11 @@ entry7.insert(-1,'0')
 canvas1.create_window(325, 240, window=entry7)
 label7 = tk.Label(root, text='Foreign Risk-free Rate(%/year):')
 canvas1.create_window(125, 240, window=label7)
-
-labelprice = tk.Label(root, text= "0")
+label8 = tk.Label(root, text="Price:")
+canvas1.create_window(200, 330, window=label8)
+labelprice = tk.Label(root, text= "0.0000")
 canvas1.create_window(250, 330, window=labelprice)
 
-greeks=["delta","gamma","theta","vega","rho"]
-#label = ttk.Treeview(root, column=greeks)
-#canvas1.create_window(250, 300, window=label)
 
 def price(call:bool):
     underlying=clicked.get()
@@ -76,8 +74,14 @@ def price(call:bool):
         opt=ForexOption(call,S,K,t,r,fr,sigma)
     elif opts.index(underlying)==3:
         opt=FuturesOption(call,S,K,t,r,sigma)
-    labelprice.config(text=float(opt.price()))
-    #label.insert('', 'end', text="1", values=opt.greeks().values())
+    label = ttk.Treeview(root, columns=list(opt.greeks().keys()), show="headings", height=1)
+    for i in list(opt.greeks().keys()):
+        label.heading(i,text=i)
+        label.column(i,anchor="center", stretch=False, width=100)
+    canvas1.create_window(252, 370, window=label)
+    labelprice.config(text=round(float(opt.price()),4))
+    greekvals=[round(i,5) for i in opt.greeks().values()]
+    label.insert('', 'end', text="1", values=greekvals)
 
 button1=tk.Button(root, text="Call Price", command=lambda: price(True))
 canvas1.create_window(200, 280, window=button1)
